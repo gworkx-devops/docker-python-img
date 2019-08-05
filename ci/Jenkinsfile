@@ -6,19 +6,23 @@ pipeline {
             agent {
                 docker {
                     image 'python:alpine'
+                    args '-v $HOME/.ssh.jenkins:/root/.ssh'
                 }
             }
             steps {
                 echo 'SetUp The Build Env For Python 3 Alpine >>'
                 sh"""
                     apk update && apk upgrade && apk add --no-cache build-base alpine-sdk git bash \
-                    openssl-dev python-dev libffi-dev
+                    openssh-client openssl-dev python-dev libffi-dev
                     printenv
                 """
 
                 echo 'Fetch The Code To Bake In Docker Image >>'
                 sh"""
                     git version
+                    git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
+                    # git clone https://gluzangi@bitbucket.org/gworkx/gworkx.site.git app-code
+                    ls -al ./
                 """
             }
         }
