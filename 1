@@ -18,23 +18,11 @@ pipeline {
                 """
 
                 echo 'Fetch The Code To Bake In Docker Image >>'
-                script {
-                    if (fileExists('./app-code')) {
-                        sh"""
-                            rm -rf ./app-code
-
-                            git version
-                            git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
-                            ls -al ./app-code
-                        """
-                    }else {
-                        sh"""
-                            git version
-                            git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
-                            ls -al ./app-code
-                        """
-                    }
-                }
+                sh"""
+                    git version
+                    git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
+                    ls -al app-code/
+                """
             }
         }
         stage('Build') {
