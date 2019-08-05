@@ -21,7 +21,7 @@ WORKDIR /app
 
 ADD source-code/ ./
 
-RUN pip install cython && pip install --no-cache-dir -r requirements.txt
+RUN pip install -U pip cython && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 CMD ["python","app.py"]
