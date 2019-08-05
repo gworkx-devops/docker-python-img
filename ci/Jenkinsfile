@@ -1,0 +1,30 @@
+pipeline {
+
+    agent {
+        docker {
+            image 'docker:latest'
+            label 'DiD'
+            args  '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    stages {
+        stage('SetUp') {
+            steps {
+                echo 'SetUp The Build Env'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Build The Image'
+            }
+        }
+        stage('Publish') {
+            steps {
+                echo 'Publish The Image To The Registry'
+            }
+        }
+    }
+
+
+}
