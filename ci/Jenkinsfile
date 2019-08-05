@@ -51,7 +51,7 @@ pipeline {
             steps {
                 echo 'Build The Image >>'
                 sh"""
-                    docker image build --no-cache -t gworkx/img:python-latest -f Dockerfile.alpine.python .
+                    docker image build --no-cache -t gworkx/img:gworkx-site -f Dockerfile.alpine.python .
                 """
             }
         }
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 echo 'Publish The Image To The Registry >>'
                 sh"""
-                    docker image ls
+                    docker image push gworkx/img:gworkx-site
                 """
             }
         }
