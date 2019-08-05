@@ -64,9 +64,11 @@ pipeline {
             }
             steps {
                 echo 'Publish The Image To The Registry >>'
-                sh"""
-                    docker image push gworkx/img:gworkx-site
-                """
+                withDockerRegistry([ credentialsId: "gworkx-dockerhub",url: "" ]) {
+                    sh"""
+                        docker image push gworkx/img:gworkx-site
+                    """
+                }
             }
         }
     }
