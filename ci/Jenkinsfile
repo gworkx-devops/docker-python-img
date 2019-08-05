@@ -1,32 +1,50 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:latest'
-            args  '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('SetUp') {
+            agent {
+                docker {
+                    image 'python:alpine'
+                }
+            }
             steps {
-                echo 'SetUp The Build Env'
+                echo 'SetUp The Build Env For Python 3 Alpine >>'
                 sh"""
+                    apk update && apk upgrade && apk add --no-cache build-base alpine-sdk git bash \
+                    openssl-dev python-dev libffi-dev
                     printenv
                 """
 
+                echo 'Fetch The Code To Bake In Docker Image >>'
+                sh"""
+                    git version
+                """
             }
         }
         stage('Build') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args  '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
-                echo 'Build The Image'
+                echo 'Build The Image >>'
                 sh"""
                     docker version
                 """
             }
         }
         stage('Publish') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args  '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
-                echo 'Publish The Image To The Registry'
+                echo 'Publish The Image To The Registry >>'
                 sh"""
                     docker info
                 """
