@@ -13,25 +13,29 @@ pipeline {
                 echo 'SetUp The Build Env For Python 3 Alpine >>'
                 sh"""
                     apk update && apk upgrade && apk add --no-cache build-base alpine-sdk git bash \
-                    openssh-client openssl-dev python-dev libffi-dev
+                    openssh-client openssl-dev python-dev libffi-dev rsync
                     printenv
                 """
 
                 echo 'Fetch The Code To Bake In Docker Image >>'
                 script {
-                    if (fileExists('./app-code')) {
+                    if (fileExists('./checkout-code')) {
                         sh"""
-                            rm -rf ./app-code
+                            rm -rf ./checkout-code
 
                             git version
-                            git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
-                            ls -al ./app-code
+                            git clone git@bitbucket.org:gworkx/gworkx.site.git checkout-code
+                            ls -al ./checkout-code
+
+                            rsync -Phavz ./checkout-code/app-code/ ./source-code/
                         """
                     }else {
                         sh"""
                             git version
-                            git clone git@bitbucket.org:gworkx/gworkx.site.git app-code
-                            ls -al ./app-code
+                            git clone git@bitbucket.org:gworkx/gworkx.site.git checkout-code
+                            ls -al ./checkout-code
+
+                            rsync -Phavz ./checkout-code/app-code/ ./source-code/
                         """
                     }
                 }
@@ -47,7 +51,7 @@ pipeline {
             steps {
                 echo 'Build The Image >>'
                 sh"""
-                    docker version
+                    docker image build --no-cache -t gworkx/img:python-latest -f Dockerfile.alpine.python .
                 """
             }
         }
@@ -61,7 +65,7 @@ pipeline {
             steps {
                 echo 'Publish The Image To The Registry >>'
                 sh"""
-                    docker info
+                    docker image ls
                 """
             }
         }
