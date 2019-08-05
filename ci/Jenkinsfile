@@ -1,26 +1,35 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:latest'
+            args  '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
         stage('SetUp') {
-            agent {
-                docker {
-                    image 'python:3-alpine'
-                    /* args  '-v /var/run/docker.sock:/var/run/docker.sock' */
-                }
-            }
             steps {
                 echo 'SetUp The Build Env'
+                sh"""
+                    printenv
+                """
+
             }
         }
         stage('Build') {
             steps {
                 echo 'Build The Image'
+                sh"""
+                    docker version
+                """
             }
         }
         stage('Publish') {
             steps {
                 echo 'Publish The Image To The Registry'
+                sh"""
+                    docker info
+                """
             }
         }
     }
