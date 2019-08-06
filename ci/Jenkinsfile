@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-/*
-    environment {
-        SELECTED_REPO=''
-    }
-*/
     stages {
         stage('SetUp') {
             agent {
@@ -25,7 +20,7 @@ pipeline {
                 script {
                     echo 'Select Repo To Build An Image >>'
 
-                    selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
+                    def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
                             [$class: 'ChoiceParameterDefinition', choices: ['gworkx.site','manec','flask-01','bottle-01'], name: 'optsRepo']
                         ]
@@ -40,8 +35,6 @@ pipeline {
 
                             git version
                             echo "${selectRepo}"
-                            #echo ${SELECTED_REPO}
-                            # git clone git@bitbucket.org:gworkx/"${selectRepo}".git checkout-code
                             git clone ${repoURI} checkout-code
                             ls -al ./checkout-code
 
@@ -50,14 +43,12 @@ pipeline {
                     }else {
                         sh"""
                             git version
-                            # git clone git@bitbucket.org:gworkx/"${selectRepo}".git checkout-code
                             git clone ${repoURI} checkout-code
                             ls -al ./checkout-code
 
                             rsync -Phavz ./checkout-code/app-code/ ./source-code/
                         """
                     }
-                    /* SELECTED_REPO = $selectRepo */
                 }
             }
         }
