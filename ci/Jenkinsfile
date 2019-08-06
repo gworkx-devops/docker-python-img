@@ -26,7 +26,7 @@ pipeline {
 
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
-                            [$class: 'ChoiceParameterDefinition', choices: ['gworkx.site','manec','flask-01','bottle-01'], name: 'optsRepo']
+                            [$class: 'ChoiceParameterDefinition', choices: ['gworkx-site','manec','flask-01','bottle-01'], name: 'optsRepo']
                         ]
                     )
 
@@ -67,7 +67,7 @@ pipeline {
             steps {
                 echo 'Build The Image >>'
                 sh"""
-                    docker image build --no-cache -t gworkx/img:"${SELECTED_REPO}" -f Dockerfile.alpine.python .
+                    docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine.python .
                 """
             }
         }
@@ -82,7 +82,7 @@ pipeline {
                 echo 'Publish The Image To The Registry >>'
                 withDockerRegistry([ credentialsId: "gworkx-dockerhub",url: "" ]) {
                     sh"""
-                        docker image push gworkx/img:"${SELECTED_REPO}"
+                        docker image push gworkx/img:${SELECTED_REPO}
                     """
                 }
             }
