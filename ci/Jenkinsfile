@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        SELECTED_REPO = ''
+    }
+
     stages {
         stage('SetUp') {
             agent {
@@ -49,6 +53,7 @@ pipeline {
                             rsync -Phavz ./checkout-code/app-code/ ./source-code/
                         """
                     }
+                    SELECTED_REPO = "${selectRepo}"
                 }
             }
         }
@@ -61,7 +66,7 @@ pipeline {
             }
             steps {
                 echo 'Build The Image >>'
-                echo "${selectRepo}"
+                echo "${SELECTED_REPO}"
                 sh"""
                     docker image build --no-cache -t gworkx/img:manec -f Dockerfile.alpine.python .
                 """
@@ -76,7 +81,7 @@ pipeline {
             }
             steps {
                 echo 'Publish The Image To The Registry >>'
-                echo "${selectRepo}"
+                echo "${SELECTED_REPO}"
                 withDockerRegistry([ credentialsId: "gworkx-dockerhub",url: "" ]) {
                     sh"""
                         docker image push gworkx/img:manec
