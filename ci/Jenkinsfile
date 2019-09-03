@@ -57,8 +57,7 @@ pipeline {
                     }else{
                         sh"""
                             rm -rf ./source-code
-                            ls -al ./app-code
-                            rsync -Phavz ./app-code/ ./source-code
+                            rsync -Phavz ./app-code/ ./source-code/
                             ls -al ./source-code
                         """
                     }

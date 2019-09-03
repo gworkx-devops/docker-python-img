@@ -55,7 +55,9 @@ httpserver.serve(app, host='0.0.0.0', port=8000)
 #   1) http://bottle.readthedocs.io/en/latest/index.html
 #   2) http://bottle-utils.readthedocs.io/en/latest/index.html
 #   3) http://bottlepy.org/docs/dev/index.html
-#   4) http://jinja.pocoo.org/docs/
-#   5) http://docs.python-guide.org/en/latest/
-#   6) https://www.toptal.com/bottle/building-a-rest-api-with-bottle-framework
+#   4) https://flask.palletsprojects.com/
+#   5) https://palletsprojects.com/p/flask/
+#   6) http://jinja.pocoo.org/docs/
+#   7) http://docs.python-guide.org/en/latest/
+#   8) https://www.toptal.com/bottle/building-a-rest-api-with-bottle-framework
 ##
