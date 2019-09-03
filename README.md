@@ -8,7 +8,7 @@
 #
 # baking the gworkx python docker image
 #
-docker image build --no-cache -t gworkx/img:python-latest -f Dockerfile.alpine.python .
+docker image build --no-cache -t gworkx/img:python-latest -f Dockerfile .
 
 #
 # push the image to a remote registry

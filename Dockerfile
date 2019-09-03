@@ -14,7 +14,7 @@ LABEL dev.gworkx.tech.version.is-production="$VERSION"
 
 RUN set -x \
     && apk update && apk upgrade && apk add --no-cache build-base alpine-sdk bash \
-    openssl-dev python-dev libffi-dev \
+    openssl-dev python-dev libffi-dev libxml2-dev libxslt-dev \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /app

@@ -17,7 +17,7 @@ pipeline {
                 echo 'SetUp The Build Env For Python 3 Alpine >>'
                 sh"""
                     apk update && apk upgrade && apk add --no-cache build-base alpine-sdk git bash \
-                    openssh-client openssl-dev python-dev libffi-dev rsync
+                    openssh-client openssl-dev python-dev libffi-dev libxml2-dev rsync
                     printenv
                 """
 
@@ -26,31 +26,40 @@ pipeline {
 
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
-                            [$class: 'ChoiceParameterDefinition', choices: ['gworkx-site','manec','flask-01','bottle-01'], name: 'optsRepo']
+                            [$class: 'ChoiceParameterDefinition', choices:
+                            ['python-latest','gworkx-site','manec','flask-01','bottle-01'], name: 'optsRepo']
                         ]
                     )
 
                     echo 'Fetch The Code To Bake In Docker Image >>'
+                    if (selectRepo != 'python-latest') {
+                        def repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
+                        if (fileExists('./checkout-code')) {
+                            sh"""
+                                rm -rf ./checkout-code
 
-                    def repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
-                    if (fileExists('./checkout-code')) {
+                                git version
+                                echo "${selectRepo}"
+                                git clone ${repoURI} checkout-code
+                                ls -al ./checkout-code
+
+                                rsync -Phavz ./checkout-code/app-code/ ./source-code/
+                            """
+                        }else {
+                            sh"""
+                                git version
+                                git clone ${repoURI} checkout-code
+                                ls -al ./checkout-code
+
+                                rsync -Phavz ./checkout-code/app-code/ ./source-code/
+                            """
+                        }
+                    }else{
                         sh"""
-                            rm -rf ./checkout-code
-
-                            git version
-                            echo "${selectRepo}"
-                            git clone ${repoURI} checkout-code
-                            ls -al ./checkout-code
-
-                            rsync -Phavz ./checkout-code/app-code/ ./source-code/
-                        """
-                    }else {
-                        sh"""
-                            git version
-                            git clone ${repoURI} checkout-code
-                            ls -al ./checkout-code
-
-                            rsync -Phavz ./checkout-code/app-code/ ./source-code/
+                            rm -rf ./source-code
+                            ls -al ./app-code
+                            rsync -Phavz ./app-code/ ./source-code
+                            ls -al ./source-code
                         """
                     }
                     SELECTED_REPO = "${selectRepo}"
@@ -67,7 +76,7 @@ pipeline {
             steps {
                 echo 'Build The Image >>'
                 sh"""
-                    docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine.python .
+                    docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile .
                 """
             }
         }
@@ -86,6 +95,12 @@ pipeline {
                     """
                 }
             }
+        }
+    }
+    post {
+        always {
+            echo 'CLEANING UP >>'
+            deleteDir()
         }
     }
 }
