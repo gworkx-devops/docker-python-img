@@ -81,11 +81,11 @@ pipeline {
                 script {
                     if (SELECTED_REPO == 'manec' ){
                         sh"""
-                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.manec .
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO}-latest -f Dockerfile.manec .
                         """
                     }else{
                         sh"""
-                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine .
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO}-latest -f Dockerfile.alpine .
                         """
                     }
                 }
@@ -102,7 +102,7 @@ pipeline {
                 echo 'Publish The Image To The Registry >>'
                 withDockerRegistry([ credentialsId: "gworkx-dockerhub",url: "" ]) {
                     sh"""
-                        docker image push gworkx/img:${SELECTED_REPO}
+                        docker image push gworkx/img:${SELECTED_REPO}-latest
                     """
                 }
             }
