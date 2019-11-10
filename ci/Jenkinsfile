@@ -74,9 +74,17 @@ pipeline {
             }
             steps {
                 echo 'Build The Image >>'
-                sh"""
-                    docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile .
-                """
+                script {
+                    if (SELECTED_REPO != 'manec' ){
+                        sh"""
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine .
+                        """
+                    }else{
+                        sh"""
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.debian .
+                        """
+                    }
+                }
             }
         }
         stage('Publish') {
