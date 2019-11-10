@@ -1,3 +1,7 @@
+// REFS :
+//
+// https://www.shellhacks.com/jenkins-pipeline-conditionally-define-variables-groovy-script/
+
 pipeline {
     agent any
 
@@ -75,13 +79,13 @@ pipeline {
             steps {
                 echo 'Build The Image >>'
                 script {
-                    if (SELECTED_REPO != 'manec' ){
+                    if (SELECTED_REPO == 'manec' ){
                         sh"""
-                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine .
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.manec .
                         """
                     }else{
                         sh"""
-                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.debian .
+                            docker image build --no-cache -t gworkx/img:${SELECTED_REPO} -f Dockerfile.alpine .
                         """
                     }
                 }

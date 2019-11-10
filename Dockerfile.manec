@@ -1,0 +1,40 @@
+FROM python:buster
+
+# set environment variable
+#
+ARG VERSION="python-manec-latest"
+ARG DEBIAN_FRONTEND="noninteractive"
+
+# set maintenance info
+#
+LABEL dev.gworkx.tech.version="v1.5"
+LABEL vendor="Gelwa Workx"
+LABEL maintainer="gelwa.workx@gmail.com"
+LABEL dev.gworkx.tech.release-date="2019-11-10"
+LABEL dev.gworkx.tech.version.is-production="$VERSION"
+
+RUN set -x \
+    && apt-get update -y && apt-get upgrade -y && apt-get install -y apt-utils build-essential coreutils \
+    ack-grep apt-transport-https ca-certificates curl gnupg lsb-release less man manpages unzip vim wget
+
+# clean up after "apt" when done
+#
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+WORKDIR /app
+
+
+# MANec preparation - add cheat command
+ADD https://github.com/cheat/cheat/releases/download/3.0.6/cheat-linux-amd64 /usr/local/bin/cheat
+RUN chmod +x /usr/local/bin/cheat
+
+# create multiple directories using bash behaviour
+RUN bash -c 'mkdir -p /root/.dotfiles/cheat/{work,personal}'
+RUN mkdir -p /root/.config/cheat && cheat --init > /root/.config/cheat/conf.yml
+RUN git clone https://github.com/cheat/cheatsheets.git /root/.dotfiles/cheat/community
+
+ADD source-code/ ./
+
+RUN pip install -U pip cython tldr && pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8000
+CMD ["python","app.py"]

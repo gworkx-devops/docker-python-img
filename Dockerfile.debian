@@ -22,16 +22,6 @@ RUN set -x \
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 WORKDIR /app
 
-
-# MANec preparation - add cheat command
-ADD https://github.com/cheat/cheat/releases/download/3.0.6/cheat-linux-amd64 /usr/local/bin/cheat
-RUN chmod +x /usr/local/bin/cheat
-
-# create multiple directories using bash behaviour
-RUN bash -c 'mkdir -p /root/.dotfiles/cheat/{work,personal}'
-RUN mkdir -p /root/.config/cheat && cheat --init > /root/.config/cheat/conf.yml
-RUN git clone https://github.com/cheat/cheatsheets.git /root/.dotfiles/cheat/community
-
 ADD source-code/ ./
 
 RUN pip install -U pip cython tldr && pip install --no-cache-dir -r requirements.txt
