@@ -15,7 +15,8 @@ LABEL dev.gworkx.tech.version.is-production="$VERSION"
 
 RUN set -x \
     && apt-get update -y && apt-get upgrade -y && apt-get install -y apt-utils build-essential coreutils \
-    ack-grep apt-transport-https ca-certificates curl gnupg lsb-release less man manpages unzip vim wget
+    ack-grep apt-transport-https aria2 ca-certificates curl lame gnupg lsb-release less man manpages rsync sox \
+    unzip vim wget zip
 
 # clean up after "apt" when done
 #
