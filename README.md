@@ -6,15 +6,29 @@
 #! /bin/bash
 
 #
-# baking the gworkx python docker image
+# baking a python docker image
 #
-docker image build --no-cache -t gworkx/img:python-latest -f Dockerfile .
+# docker image build -f Dockerfile.debian.php -t gworkx/img:python-workshop-3 .
+# docker image build --no-cache -f Dockerfile.debian.php -t gworkx/img:python-workshop-3 .
+
+# image baking - alpine
+#
+docker image build -f Dockerfile.alpine.php -t gworkx/img:python-workshop-alpine .
+
+# image baking - debian
+#
+docker image build -f Dockerfile.debian.php -t gworkx/img:python-workshop-debian .
+
+# image baking - MANec
+#
+docker image build -f Dockerfile.manec -t gworkx/img:python-workshop-manec .
 
 #
 # push the image to a remote registry
 #
-docker push gworkx/img:python-latest
+docker push gworkx/img:python-workshop-latest
 ```
+
 ## HOW TO SPIN A CONTAINER FROM THE IMAGE
 
 + To instantiate a docker container from the image execute the following steps:
@@ -23,7 +37,7 @@ docker push gworkx/img:python-latest
 #! /bin/bash
 
 #
-# start apache web server with a php module 
+# start python web server with bottle or flask module
 #
-docker container run -d --name python-app-01 -p 8000:8000 -v $PWD/data-source gworkx/img:python-latest
+docker container run -d --name python-app-01 -p 8000:8000 -v $PWD/data-source gworkx/img:python-workshop-latest
 ```

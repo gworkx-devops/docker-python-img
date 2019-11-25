@@ -31,12 +31,12 @@ pipeline {
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
                             [$class: 'ChoiceParameterDefinition', choices:
-                            ['python-latest','gworkx-site','manec','flask-01','bottle-01'], name: 'optsRepo']
+                            ['workshop-app-python','workshop-manec'], name: 'optsRepo']
                         ]
                     )
 
                     echo 'Fetch The Code To Bake In Docker Image >>'
-                    if (selectRepo != 'python-latest') {
+                    if (selectRepo != 'workshop-app-python') {
                         def repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
                         if (fileExists('./checkout-code')) {
                             sh"""
