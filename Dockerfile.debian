@@ -27,4 +27,4 @@ ADD source-code/ ./
 RUN pip install -U pip cython tldr && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
-CMD ["python","app.py"]
+ENTRYPOINT ["python","app.py"]
